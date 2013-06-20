@@ -4,6 +4,7 @@ use utf8;
 use strict;
 use warnings;
 use Storable;
+use Data::Printer;
 
 sub load {
     my ( $class, $robot ) = @_;
@@ -17,25 +18,24 @@ sub load {
 sub emo_process {
     my $msg = shift;
 
-    my $emot1 = '
-                ^^              @@@@@@@@@
-       ^^       ^^            @@@@@@@@@@@@@@@
-                            @@@@@@@@@@@@@@@@@@              ^^
-                           @@@@@@@@@@@@@@@@@@@@
- ~~~~ ~~ ~~~~~ ~~~~~~~~ ~~ &&&&&&&&&&&&&&&&&&&& ~~~~~~~ ~~~~~~~~~~~ ~~~
- ~         ~~   ~  ~       ~~~~~~~~~~~~~~~~~~~~ ~       ~~     ~~ ~
-   ~      ~~      ~~ ~~ ~~  ~~~~~~~~~~~~~ ~~~~  ~     ~~~    ~ ~~~  ~ ~~
-   ~  ~~     ~         ~      ~~~~~~  ~~ ~~~       ~~ ~ ~~  ~~ ~
- ~  ~       ~ ~      ~           ~~ ~~~~~~  ~      ~~  ~             ~~
-       ~             ~        ~      ~      ~~   ~             ~ 
+    my $user_input = $msg->match->[0];
+
+    my @emos;
+    my $emoref = retrieve('emoticons.dat');
+    for my $key ( keys %$emoref ) {
+        push @emos, $key;
+    }
     
-    ';
-    store \$emot1, 'emoticonsA';
-    my $emoticon = retrieve('emoticonsA');
-
-    $msg->send("\n", split /\n/, $$emoticon);
+    my $flag = 'off';
+    for my $emo_key ( @emos ) {
+        if ( $user_input eq $emo_key ) {
+            $msg->send( split (/\n/, $$emoref{$emo_key}) );
+            $flag = 'on';
+        }
+    }
+    my $able = join '/ ', @emos;
+    $msg->send('List of available emoticons - ' . $able) if ( $flag eq 'off');
 }
-
 
 1;
 
@@ -47,7 +47,7 @@ sub emo_process {
  
 =head1 SYNOPSIS
 
-    emo <emoticons> - Show Emoticons
+    emo <emoticon name> - Show Emoticons
  
 =head1 AUTHOR
 
