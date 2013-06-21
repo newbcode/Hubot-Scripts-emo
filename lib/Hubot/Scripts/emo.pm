@@ -19,6 +19,7 @@ sub emo_process {
     my $msg = shift;
 
     my $user_input = $msg->match->[0];
+    my $sender = $msg->message->user->{name};
 
     my @emos;
     my $emoref = retrieve('emoticons.dat');
@@ -29,6 +30,7 @@ sub emo_process {
     my $flag = 'off';
     for my $emo_key ( @emos ) {
         if ( $user_input eq $emo_key ) {
+            $msg->send('--------------' .  $sender . '\'s emoticon' . '--------------');
             $msg->send( split (/\n/, $$emoref{$emo_key}) );
             $flag = 'on';
         }
