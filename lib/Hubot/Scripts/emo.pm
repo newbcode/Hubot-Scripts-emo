@@ -10,7 +10,7 @@ sub load {
     my ( $class, $robot ) = @_;
  
     $robot->hear(
-        qr/^emo (.+)/i,    
+        qr/(happy|pingpong|music) /i,    
         \&emo_process,
     );
 }
