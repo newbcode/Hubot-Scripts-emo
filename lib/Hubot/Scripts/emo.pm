@@ -10,7 +10,7 @@ sub load {
     my ( $class, $robot ) = @_;
  
     $robot->hear(
-        qr/^emo (.+)/i,    
+        qr/(화남|머리아픔|맥주|도망|핑퐁|행복|좀비|댄스|슬픔|사랑|발자국|헬로우|음악|와우|폭격|일출)/i,    
         \&emo_process,
     );
 }
@@ -30,7 +30,6 @@ sub emo_process {
     my $flag = 'off';
     for my $emo_key ( @emos ) {
         if ( $user_input eq $emo_key ) {
-            $msg->send('--------------' .  $sender . '\'s emoticon' . '--------------');
             $msg->send( split (/\n/, $$emoref{$emo_key}) );
             $flag = 'on';
         }
