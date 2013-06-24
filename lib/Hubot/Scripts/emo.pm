@@ -37,7 +37,7 @@ sub emo_process {
             }
             elsif ( $user_input eq 'pong') {
                 $msg->send( split (/\n/, $$emoref{$emo_key}) );
-                $msg->send( '                    '."$sender" );
+                $msg->send( '                          '."$sender" );
                 $flag = 'on';
             }
 
